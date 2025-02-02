@@ -45,8 +45,25 @@ int main() {
                        test_binary_search_random_but_ordered);
     if (test == NULL) goto cleanup;
     
-    test = CU_add_test(suite, "Binary Search Find One Element",
+    test = CU_add_test(suite, "binary search find one element",
                        test_binary_search_one_element);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "binary search find zero element",
+                       test_binary_search_zero_element);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "binary search find negative element",
+                       test_binary_search_negative_elements);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "binary search find large gap element",
+                       test_binary_search_large_gaps);
+    if (test == NULL) goto cleanup;
+
+
+    test = CU_add_test(suite, "binary search find one of two elements",
+                       test_binary_search_two_elements);
     if (test == NULL) goto cleanup;
 
     // Easy to add more tests:

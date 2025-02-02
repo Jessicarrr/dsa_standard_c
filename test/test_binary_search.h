@@ -109,3 +109,117 @@ void test_binary_search_one_element(void) {
 
     CU_ASSERT(result == target_index);
 }
+
+void test_binary_search_zero_element(void) {
+    printf("\n\033[1;35m=== Testing Binary Search with Zero Elements "
+           "===\033[0m\n");
+    
+    int size = 0;
+    int* arr = NULL;
+
+    int target_value = 5;
+    int target_index = -1;
+
+    print_array(arr, size < 20 ? size : 20,
+               "Array to search");
+
+    clock_t start = clock();
+    int result = binary_search(arr, size, target_value);
+    clock_t end = clock();
+
+    double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Time taken: %f seconds\n", time_taken);
+    printf("Searched for target number %d, got position %d, "
+            "should've been at position %d\n",
+            target_value,
+            result,
+            target_index);
+
+    CU_ASSERT(result == target_index);
+}
+
+
+void test_binary_search_negative_elements(void) {
+    printf("\n\033[1;35m=== Testing Binary Search with Negative Elements "
+           "===\033[0m\n");
+    
+    int size = 10;
+    int arr[] = { -10, -9, -8, -7, -6, -5, -4, -3, -2, -1 };
+
+    int target_index = rand() % size;
+    int target_value = arr[target_index];
+
+    print_array(arr, size < 20 ? size : 20,
+               "Array to search");
+
+    clock_t start = clock();
+    int result = binary_search(arr, size, target_value);
+    clock_t end = clock();
+
+    double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Time taken: %f seconds\n", time_taken);
+    printf("Searched for target number %d, got position %d, "
+            "should've been at position %d\n",
+            target_value,
+            result,
+            target_index);
+
+    CU_ASSERT(result == target_index);
+}
+
+void test_binary_search_large_gaps(void) {
+    printf("\n\033[1;35m=== Testing Binary Search with Large Gaps "
+           "===\033[0m\n");
+    
+    int size = 5;
+    int arr[] = { 1, 100, 10000, 100000, 999999999 };
+
+    int target_index = rand() % size;
+    int target_value = arr[target_index];
+
+    print_array(arr, size < 20 ? size : 20,
+               "Array to search");
+
+    clock_t start = clock();
+    int result = binary_search(arr, size, target_value);
+    clock_t end = clock();
+
+    double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Time taken: %f seconds\n", time_taken);
+    printf("Searched for target number %d, got position %d, "
+            "should've been at position %d\n",
+            target_value,
+            result,
+            target_index);
+
+    CU_ASSERT(result == target_index);
+}
+
+
+void test_binary_search_two_elements(void) {
+    printf("\n\033[1;35m=== Testing Binary Search with Two Elements "
+           "===\033[0m\n");
+    
+    int size = 2;
+    int arr[] = { 1, 100000 };
+
+    int target_index = rand() % size;
+    int target_value = arr[target_index];
+
+    print_array(arr, size < 20 ? size : 20,
+               "Array to search");
+
+    clock_t start = clock();
+    int result = binary_search(arr, size, target_value);
+    clock_t end = clock();
+
+    double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Time taken: %f seconds\n", time_taken);
+    printf("Searched for target number %d, got position %d, "
+            "should've been at position %d\n",
+            target_value,
+            result,
+            target_index);
+
+    CU_ASSERT(result == target_index);
+}
