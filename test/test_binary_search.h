@@ -81,3 +81,31 @@ void test_binary_search_random_but_ordered(void) {
 
     CU_ASSERT(result == target_index);
 }
+
+void test_binary_search_one_element(void) {
+    printf("\n\033[1;35m=== Testing Binary Search with One Element "
+           "===\033[0m\n");
+    
+    int size = 1;
+    int* arr = generate_array(RANDOM_ARRAY, size);
+
+    int target_index = 0;
+    int target_value = arr[target_index];
+
+    print_array(arr, size < 20 ? size : 20,
+               "Array to search");
+
+    clock_t start = clock();
+    int result = binary_search(arr, size, target_value);
+    clock_t end = clock();
+
+    double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Time taken: %f seconds\n", time_taken);
+    printf("Searched for target number %d, got position %d, "
+            "should've been at position %d\n",
+            target_value,
+            result,
+            target_index);
+
+    CU_ASSERT(result == target_index);
+}

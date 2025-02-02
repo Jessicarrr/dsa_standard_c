@@ -45,6 +45,10 @@ int main() {
                        test_binary_search_random_but_ordered);
     if (test == NULL) goto cleanup;
     
+    test = CU_add_test(suite, "Binary Search Find One Element",
+                       test_binary_search_one_element);
+    if (test == NULL) goto cleanup;
+
     // Easy to add more tests:
     //
     // test = CU_add_test(suite, "Mostly Sorted Array",
