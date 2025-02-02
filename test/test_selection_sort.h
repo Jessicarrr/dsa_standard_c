@@ -1,4 +1,6 @@
 #include <CUnit/Basic.h>
+#include <stdbool.h>
+
 #include "sorting/selection_sort.h"
 #include "test_helpers.h"
 
@@ -22,9 +24,8 @@ void test_selection_sort_random(void) {
     double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("Time taken: %f seconds\n", time_taken);
 
-    for (int i = 1; i < size; i++) {
-        CU_ASSERT(arr[i-1] <= arr[i]);
-    }
+    bool is_ordered = is_array_ordered(arr, size);
+    CU_ASSERT(is_ordered == true);
 }
 
 void test_selection_sort_reverse(void) {
@@ -47,7 +48,6 @@ void test_selection_sort_reverse(void) {
     double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("Time taken: %f seconds\n", time_taken);
 
-    for (int i = 1; i < size; i++) {
-        CU_ASSERT(arr[i-1] <= arr[i]);
-    }
+    bool is_ordered = is_array_ordered(arr, size);
+    CU_ASSERT(is_ordered == true);
 }

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <stdbool.h>
 
 // Enum to specify array type
 typedef enum {
@@ -20,6 +21,18 @@ void print_array(int arr[], int size, const char* message) {
         printf("%d%s", arr[i], i < size - 1 ? ", " : "");
     }
     printf("]\n");
+}
+
+bool is_array_ordered(int arr[], int size) {
+    if (size <= 1) return true;
+
+    for (int i = 1; i < size; i++) {
+        if (arr[i] < arr[i - 1]) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 // Function to generate array of specified type and size
