@@ -1,0 +1,12 @@
+*.o
+*.exe
+*.out
+*.dSYM/
+
+.vscode/
+.DS_Store
+.cache
+.idea
+build/**
+
+compile_commands.json
