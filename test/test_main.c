@@ -16,7 +16,8 @@ int main() {
     }
 
     /* Add a suite to the registry */
-    CU_pSuite suite = CU_add_suite("Selection Sort Test Suite", init_suite, clean_suite);
+    CU_pSuite suite = CU_add_suite("Selection Sort Test Suite",
+                                   init_suite, clean_suite);
     if (NULL == suite) {
         CU_cleanup_registry();
         return CU_get_error();
@@ -24,23 +25,31 @@ int main() {
 
     /* Register all tests */
     CU_Test* test;
-    test = CU_add_test(suite, "Random Array Sort", test_selection_sort_random);
+    test = CU_add_test(suite, "Random Array Sort",
+                       test_selection_sort_random);
     if (test == NULL) goto cleanup;
     
-    test = CU_add_test(suite, "Reverse Array Sort", test_selection_sort_reverse);
+    test = CU_add_test(suite, "Reverse Array Sort",
+                       test_selection_sort_reverse);
     if (test == NULL) goto cleanup;
 
-    test = CU_add_test(suite, "Sorted Array Binary Search", test_binary_search_ordered);
+    test = CU_add_test(suite, "Sorted Array Binary Search",
+                       test_binary_search_ordered);
     if (test == NULL) goto cleanup;
 
-    test = CU_add_test(suite, "Binary Search Find First", test_binary_search_find_first);
+    test = CU_add_test(suite, "Binary Search Find First",
+                       test_binary_search_find_first);
     if (test == NULL) goto cleanup;
 
-    test = CU_add_test(suite, "Binary Search Find Random Sorted", test_binary_search_random_but_ordered);
+    test = CU_add_test(suite, "Binary Search Find Random Sorted",
+                       test_binary_search_random_but_ordered);
     if (test == NULL) goto cleanup;
     
     // Easy to add more tests:
-    // test = CU_add_test(suite, "Mostly Sorted Array", test_selection_sort_mostly_sorted);
+    //
+    // test = CU_add_test(suite, "Mostly Sorted Array",
+    //                    test_selection_sort_mostly_sorted);
+    //
     // if (test == NULL) goto cleanup;
 
     /* Run all tests using CUnit Basic interface */
