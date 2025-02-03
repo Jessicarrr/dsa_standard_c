@@ -4,6 +4,7 @@
 #include "test_helpers.h"
 #include "test_selection_sort.h"
 #include "test_binary_search.h"
+#include "test_quick_sort.h"
 
 /* Test Suite setup and cleanup functions */
 int init_suite(void) { return 0; }
@@ -65,6 +66,12 @@ int main() {
     test = CU_add_test(suite, "binary search find one of two elements",
                        test_binary_search_two_elements);
     if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Quick sort sorted array",
+                       test_quick_sort_random);
+    if (test == NULL) goto cleanup;
+
+
 
     // Easy to add more tests:
     //
