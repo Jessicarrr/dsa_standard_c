@@ -11,4 +11,9 @@ void print_array_with_bold_elements(int* arr, int size, int* bold_indexes,
                                     int bold_indexes_size); 
 void swap_elements(int* arr, int left, int right);
 
+int* copy_array(int* array, int size);
+
+int copy_array_to(int* source_array, int source_size,
+                   int* destination_array, int destination_size);
+
 #endif
