@@ -10,6 +10,8 @@ typedef enum {
     ERROR_NULL_ARRAY = 2
 } CopyStatus;
 
+bool dsc_is_debug = true;
+
 bool is_in_array(int* arr, int size, int value) {
     for (int i = 0; i < size; i++) {
         if (arr[i] == value) {
@@ -81,4 +83,20 @@ int copy_array_to(int* source_array, int source_size,
 
     return SUCCESS;
 
+}
+
+void print_out_of_memory() {
+    fprintf(stderr, "Memory could not be allocated - are you out "
+            "of memory?");
+}
+
+void print_debug(char* stuff_to_say, ...) {
+    if (dsc_is_debug == false) {
+        return;
+    }
+
+    va_list args;
+    va_start(args, stuff_to_say);
+    vprintf(stuff_to_say, args);
+    va_end(args);
 }
