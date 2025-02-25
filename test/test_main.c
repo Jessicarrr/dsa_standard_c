@@ -6,6 +6,7 @@
 #include "test_binary_search.h"
 #include "test_quick_sort.h"
 #include "test_merge_sort.h"
+#include "test_list.h"
 
 /* Test Suite setup and cleanup functions */
 int init_suite(void) { return 0; }
@@ -80,9 +81,45 @@ int main() {
                        test_quick_sort_random);
     if (test == NULL) goto cleanup;
 
+    test = CU_add_test(suite, "Simple create list",
+                       test_create_small_list);
+    if (test == NULL) goto cleanup;
 
+    test = CU_add_test(suite, "Simple create larger list",
+                       test_create_larger_list);
+    if (test == NULL) goto cleanup;
 
-    // Easy to add more tests:
+    test = CU_add_test(suite, "Create list and remove elements",
+                       test_create_list_and_remove);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Create list and remove many elements",
+                       test_create_list_and_remove_many);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Remove from nulll list",
+                       test_remove_from_null_list);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Remove from empty list",
+                       test_remove_from_empty_list);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Remove last element",
+                       test_list_remove_last_element);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Remove duplicate values in list",
+                       test_list_remove_duplicate_values);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Remove negative index from list",
+                       test_list_remove_negative_index);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "List add remove over time",
+                       test_list_add_remove_over_time);
+    if (test == NULL) goto cleanup;    // Easy to add more tests:
     //
     // test = CU_add_test(suite, "Mostly Sorted Array",
     //                    test_selection_sort_mostly_sorted);
