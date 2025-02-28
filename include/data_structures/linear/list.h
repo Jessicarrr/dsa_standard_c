@@ -11,7 +11,9 @@ List* create_list(size_t item_size);
 
 void list_insert(List* list, void* data);
 
-void list_remove(List* list, int index);
+void list_insert_at(List* list, void* item, size_t position);
+
+void list_remove(List* list, size_t index);
 
 void* list_get_pointer_to(List* list, int index);
 

@@ -111,7 +111,34 @@ void list_insert(List* list, void* item) {
     list->length += 1;
 }
 
-void list_remove(List* list, int index) {
+void list_insert_at(List* list, void* item, size_t position) {
+    if (needs_capacity(list)) {
+        increase_list_capacity(list);
+    }
+
+    uint8_t* address = (uint8_t*) list->data + (position * list->item_size);
+
+    if (position < list->length) {
+        size_t num_elements_to_move = (list->length) - position;
+        size_t size_to_move = num_elements_to_move * list->item_size;
+        uint8_t* next = address + list->item_size;
+
+        /*printf("Inserting at address %p - moving next elements forward "
+                "starting at %p and "
+                "moving %zd elements with size of %zd\n",
+                address, next, num_elements_to_move, size_to_move);*/
+                
+        memmove(next, address, size_to_move);
+    }
+    /*else {
+        printf("Inserting at address %p - no elements to move.\n", address);
+    }*/
+
+    memcpy(address, item, list->item_size);
+    list->length += 1;
+}
+
+void list_remove(List* list, size_t index) {
     if (list == NULL || list->length <= 0) {
         return;
     }
