@@ -9,7 +9,7 @@
 #define NEEDS_ROOM_THRESHOLD 1
 
 List* create_list(size_t item_size) {
-    List* new_list = malloc(sizeof(List));
+    List* new_list = (List*) malloc(sizeof(List));
 
     if (new_list == NULL) {
         fprintf(stderr, "Could not create new list, "
@@ -29,7 +29,7 @@ static void decrease_list_capacity(List* list) {
         return;
     }
 
-    int new_capacity = list->capacity - CAPACITY_INCREMENT;
+    size_t new_capacity = list->capacity - CAPACITY_INCREMENT;
 
     if (list->length > new_capacity) {
         fprintf(stderr, "decrease_list_capacity called when the length of "
@@ -145,24 +145,23 @@ void list_remove(List* list, size_t index) {
 
     if (index < 0) {
         fprintf(stderr, "Cannot remove item from a list using a "
-                         "negative index (%d)\n",
+                         "negative index (%zd)\n",
                 index);
         return;
     }
 
     if (index >= list->length) {
-        fprintf(stderr, "Cannot delete element at index %d because the "
+        fprintf(stderr, "Cannot delete element at index %zd because the "
                 "index is beyond the scope of the list. (length %zd)\n",
                 index, list->length);
         return;
     }
 
-    uint8_t* index_address = (uint8_t*) 
-                             (list->data + (list->item_size * index));
+    uint8_t* index_address =((uint8_t*)list->data) + (list->item_size * index);
 
-    uint8_t* next_address = (uint8_t*)
-                            (list->data + (list->item_size * index) 
-                            + list->item_size);
+    uint8_t* next_address = ((uint8_t*)
+                            list->data) + (list->item_size * index) 
+                            + list->item_size;
 
     size_t size_to_move = (list->item_size * (list->length - index - 1));
 
@@ -177,23 +176,26 @@ void list_remove(List* list, size_t index) {
     }
 }
 
-void* list_get_pointer_to(List* list, int index) {
+void* list_get_pointer_to(List* list, size_t index) {
     if(list == NULL || index < 0 || index > list->length) {
         return NULL;
     }
 
     uint8_t* first_pointer = (uint8_t*) list->data;
-    uint8_t* relevant_pointer = (uint8_t*) (first_pointer + (list->item_size * index));
+    uint8_t* relevant_pointer = (uint8_t*)
+            (first_pointer + (list->item_size * index));
     void* void_pointer = (void*) relevant_pointer;
     return void_pointer;
 }
 
-int list_get_value_at(List* list, int index, void* out) {
-    if(list == NULL || index < 0 || index > list->length || list->length < 1) {
+int list_get_value_at(List* list, size_t index, void* out) {
+    if(list == NULL || index < 0 
+        || index > list->length || list->length < 1) {
         return -1;
     }
 
-    uint8_t* relevant_pointer = (uint8_t*) (list->data + (list->item_size * index));
+    uint8_t* relevant_pointer = ((uint8_t*) 
+            list->data) + list->item_size * index;
     memcpy(out, relevant_pointer, list->item_size);
     return 0;
 }
@@ -216,7 +218,7 @@ void print_list(List* list) {
 
     printf("List @ %p - length: %zd, data size: %zd, "
            "capacity: %zd, contents:\n",
-           list, list->length, list->item_size, list->capacity);
+           (void*)list, list->length, list->item_size, list->capacity);
 
     if (list->length <= 0) {
         printf("Empty list.\n");
@@ -225,9 +227,11 @@ void print_list(List* list) {
 
     int* array_as_int = (int*)list->data;
 
-    for(int i = 0; i < list->length; i++) {
+    printf("[ ");
+
+    for(size_t i = 0; i < list->length; i++) {
         int data_as_int = array_as_int[i];
         printf("%d, ", data_as_int);
     }
-    printf("\n");
+    printf("]\n");
 }
