@@ -119,7 +119,15 @@ int main() {
 
     test = CU_add_test(suite, "List add remove over time",
                        test_list_add_remove_over_time);
-    if (test == NULL) goto cleanup;    // Easy to add more tests:
+    if (test == NULL) goto cleanup;    
+    
+    test = CU_add_test(suite, "List place at index",
+        test_list_place_at_index);
+    if (test == NULL) goto cleanup; 
+
+    test = CU_add_test(suite, "List of structs",
+        test_list_of_structs);
+    if (test == NULL) goto cleanup;   
     //
     // test = CU_add_test(suite, "Mostly Sorted Array",
     //                    test_selection_sort_mostly_sorted);
