@@ -26,4 +26,6 @@ void list_destroy(List* list);
 
 void print_list(List* list);
 
+void print_list_custom(List* list, char* (*to_string)(void* item));
+
 #endif

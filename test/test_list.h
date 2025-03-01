@@ -281,6 +281,8 @@ void test_list_of_structs(void) {
     char name[] = "List of structs";
     List* list = test_generate_struct_list(name, 10);
 
+    print_list_custom(list, test_struct_to_string);
+
     TestStruct* test = (TestStruct*)malloc(sizeof(TestStruct));
 
     list_get_value_at(list, 3, test);

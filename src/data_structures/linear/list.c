@@ -132,7 +132,7 @@ void list_insert_at(List* list, void* item, size_t position) {
                 "starting at %p and "
                 "moving %zd elements with size of %zd\n",
                 address, next, num_elements_to_move, size_to_move);*/
-                
+               
         memmove(next, address, size_to_move);
     }
     /*else {
@@ -238,5 +238,38 @@ void print_list(List* list) {
         int data_as_int = array_as_int[i];
         printf("%d, ", data_as_int);
     }
+    printf("]\n");
+}
+
+void print_list_custom(List* list, char* (*to_string)(void* item)) {
+    if (list == NULL) {
+        printf("List is null.\n");
+        return;
+    }
+
+    if (to_string == NULL) {
+        fprintf(stderr, "print_list_custom function parameter should not be null.");
+        return;
+    }
+
+    printf("List @ %p - length: %zd, data size: %zd, "
+        "capacity: %zd, contents:\n",
+        (void*)list, list->length, list->item_size, list->capacity);
+
+    if (list->length <= 0) {
+        printf("Empty list.\n");
+        return;
+    }
+
+    printf("[ ");
+    
+    for(size_t i = 0; i < list->length; i++) {
+        void* item = ((uint8_t*)list->data) + (i * list->item_size);
+        char* description = to_string(item);
+        printf("%s", description);
+        free(description);
+        printf(", ");
+    }
+
     printf("]\n");
 }
