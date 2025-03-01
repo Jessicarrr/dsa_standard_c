@@ -116,6 +116,11 @@ void list_insert_at(List* list, void* item, size_t position) {
         increase_list_capacity(list);
     }
 
+    if (position > list->length || position < 0) {
+        fprintf(stderr, "Index out of bounds in List, using index %zd", position);
+        return;
+    }
+
     uint8_t* address = (uint8_t*) list->data + (position * list->item_size);
 
     if (position < list->length) {
