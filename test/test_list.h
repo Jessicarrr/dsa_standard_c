@@ -4,6 +4,7 @@
 
 #include "test_helpers.h"
 #include <CUnit/Basic.h>
+#include "test_struct.h"
 
 List* test_generate_list(char* name, size_t size) {
     printf("\n\033[1;35m=== Testing Lists (Dynamic array): %s ===\033[0m\n",
@@ -15,6 +16,21 @@ List* test_generate_list(char* name, size_t size) {
         int num = i;
         int* ptr = &num;
         list_insert(list, ptr);
+    }
+
+    return list;
+}
+
+List* test_generate_struct_list(char* name, size_t size) {
+    printf("\n\033[1;35m=== Testing Lists (Dynamic array): %s ===\033[0m\n",
+        name);
+
+    List* list = create_list(sizeof(TestStruct));
+    
+    for(size_t i = 0; i  < size; i++) {
+        TestStruct* tester = create_test_struct();
+        list_insert(list, tester);
+        free(tester);
     }
 
     return list;
@@ -231,5 +247,38 @@ void test_list_add_remove_over_time(void) {
 
     print_list(list);
     list_destroy(list);
+}
 
+void test_list_place_at_index(void) {
+    char name[] = "List add at specific indexes";
+    List* list = test_generate_list(name, 5);
+    int value_to_insert = 33;
+    int* value_ptr = &value_to_insert;
+    int index = 3;
+
+    printf("List before changes: ");
+    print_list(list);
+    list_insert_at(list, value_ptr, index);
+    printf("Inserted number 5 into middle of array.");
+    print_list(list);
+    int resultValue = -1;
+    int* result = &resultValue;
+    list_get_value_at(list, index, result);
+    CU_ASSERT_EQUAL(*result, value_to_insert);
+    list_destroy(list);
+}
+
+void test_list_of_structs(void) {
+    char name[] = "List of structs";
+    List* list = test_generate_struct_list(name, 10);
+
+    TestStruct* test = (TestStruct*)malloc(sizeof(TestStruct));
+
+    list_get_value_at(list, 3, test);
+    //TestStruct* test = (TestStruct*) ptr;
+    printf("List of structs, index value is %d", test->index);
+
+    CU_ASSERT_EQUAL(test->index, 3);
+    free(test);
+    list_destroy(list);
 }
