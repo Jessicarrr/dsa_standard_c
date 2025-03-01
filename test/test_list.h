@@ -12,7 +12,7 @@ List* test_generate_list(char* name, size_t size) {
 
     List* list = create_list(sizeof(int));
 
-    for(int i = 0; i < size; i++) {
+    for(size_t i = 0; i < size; i++) {
         int num = i;
         int* ptr = &num;
         list_insert(list, ptr);
@@ -37,7 +37,8 @@ List* test_generate_struct_list(char* name, size_t size) {
 }
 
 void test_create_small_list(void) {
-    List* list = test_generate_list("Generate small list", 5);
+    char name[] = "Generate small list";
+    List* list = test_generate_list(name, 5);
 
     CU_ASSERT_EQUAL(list->length, 5);
 
@@ -46,7 +47,8 @@ void test_create_small_list(void) {
 }
 
 void test_create_larger_list(void) {
-    List* list = test_generate_list("Generate larger list", 25); 
+    char name[] = "Generate larger list";
+    List* list = test_generate_list(name, 25); 
 
     CU_ASSERT_EQUAL(list->length, 25);
 
@@ -55,7 +57,8 @@ void test_create_larger_list(void) {
 }
 
 void test_create_list_and_remove(void) {
-    List* list = test_generate_list("Create list and remove", 33);
+    char name[] = "Create list and remove";
+    List* list = test_generate_list(name, 33);
 
     // now has 0 to 32.
 
@@ -83,7 +86,8 @@ void test_create_list_and_remove(void) {
 }
 
 void test_create_list_and_remove_many(void) {
-    List* list = test_generate_list("Create list and remove many", 26);
+    char name[] = "Create list and remove many";
+    List* list = test_generate_list(name, 26);
 
     for(int i = 0; i < 15; i++) {
         list_remove(list, 0);
@@ -108,7 +112,8 @@ void test_create_list_and_remove_many(void) {
 }
 
 void test_remove_from_null_list(void) {
-    List* list = test_generate_list("Remove from null list", 0);
+    char name[] = "Remove from null list";
+    List* list = test_generate_list(name, 0);
     free(list);
     list = NULL;
 
@@ -125,7 +130,8 @@ void test_remove_from_null_list(void) {
 }
 
 void test_remove_from_empty_list(void) {
-    List* list = test_generate_list("Remove from empty list", 0);
+    char name[] = "Remove from empty list";
+    List* list = test_generate_list(name, 0);
 
     list_remove(list, 15);
     list_remove(list, 0);
@@ -141,7 +147,8 @@ void test_remove_from_empty_list(void) {
 }
 
 void test_list_remove_last_element(void) {
-    List* list = test_generate_list("Remove last element", 25);
+    char name[] = "Remove last element";
+    List* list = test_generate_list(name, 25);
     //list 0 to 24
 
     int last_element = list->length - 1;
@@ -150,7 +157,7 @@ void test_list_remove_last_element(void) {
 
     //list 0 to 23
 
-    int* result = list_get_pointer_to(list, list->length - 1);
+    int* result = (int*)list_get_pointer_to(list, list->length - 1);
 
     printf("Does %d == 23?\n", *result);
     CU_ASSERT_EQUAL(*result, 23);
@@ -184,7 +191,7 @@ void test_list_remove_duplicate_values(void) {
 
     //printf("\n");
     
-    int* first_pointer = list_get_pointer_to(list, 0);
+    int* first_pointer = (int*)list_get_pointer_to(list, 0);
     CU_ASSERT_EQUAL(*first_pointer, 0);
 
     print_list(list);
@@ -192,19 +199,21 @@ void test_list_remove_duplicate_values(void) {
 }
 
 void test_list_remove_negative_index(void) {
-    List* list = test_generate_list("Remove negative indexes", 32);
+    char name[] = "Remove negative indexes";
+    List* list = test_generate_list(name, 32);
 
     list_remove(list, -5);
     print_list(list);
 
-    int* first = list_get_pointer_to(list, 0);
+    int* first = (int*)list_get_pointer_to(list, 0);
     CU_ASSERT_EQUAL(*first, 0);
 
     list_destroy(list);
 }
 
 void test_list_add_remove_over_time(void) {
-    List* list = test_generate_list("List add and remove over time", 11);
+    char name[] = "List add and remove over time";
+    List* list = test_generate_list(name, 11);
 
     // list currently 0 - 10
     list_remove(list, 3);
@@ -242,7 +251,7 @@ void test_list_add_remove_over_time(void) {
 
     // 4, 5, 6, 7, 8, 9, 10, 5, 5, 5, 5, 5, 5
 
-    int* first = list_get_pointer_to(list, 0);
+    int* first = (int*)list_get_pointer_to(list, 0);
     CU_ASSERT_EQUAL(*first, 4);
 
     print_list(list);
