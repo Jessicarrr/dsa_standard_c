@@ -192,6 +192,11 @@ enum RingBufferReturnCode ring_buffer_insert(RingBuffer* buffer, void* data) {
 }
 
 enum RingBufferReturnCode get_and_remove_first(RingBuffer* buffer, void* out) {
+    if (buffer == NULL) {
+        fprintf(stderr, "get_first in RingBuffer, 'buffer' param is null\n");
+        return RBUFFER_ERROR_INVALID_PARAM;
+    }
+
     if (out == NULL) {
         fprintf(stderr, "get_and_remove_first in RingBuffer, 'out' param is null.\n");
         return RBUFFER_ERROR_INVALID_PARAM;
@@ -225,6 +230,11 @@ enum RingBufferReturnCode get_and_remove_first(RingBuffer* buffer, void* out) {
 }
 
 enum RingBufferReturnCode get_and_remove_last(RingBuffer* buffer, void* out) {
+    if (buffer == NULL) {
+        fprintf(stderr, "get_first in RingBuffer, 'buffer' param is null\n");
+        return RBUFFER_ERROR_INVALID_PARAM;
+    }
+
     if (out == NULL) {
         fprintf(stderr, "get_and_remove_last in RingBuffer, 'out' param is null\n");
         return RBUFFER_ERROR_INVALID_PARAM;
@@ -252,6 +262,51 @@ enum RingBufferReturnCode get_and_remove_last(RingBuffer* buffer, void* out) {
         buffer->next_position = 0;
     }
 
+    return RBUFFER_OK;
+}
+
+enum RingBufferReturnCode get_first(RingBuffer* buffer, void* out) {
+    if (buffer == NULL) {
+        fprintf(stderr, "get_first in RingBuffer, 'buffer' param is null\n");
+        return RBUFFER_ERROR_INVALID_PARAM;
+    }
+
+    if (out == NULL) {
+        fprintf(stderr, "get_first in RingBuffer, 'out' param is null\n");
+        return RBUFFER_ERROR_INVALID_PARAM;
+    }
+    
+    if (is_empty(buffer)) {
+        fprintf(stderr, "Cannot get from an empty ring buffer\n");
+        return RBUFFER_ERROR_IS_EMPTY;
+    }
+
+    uint8_t* head_address = ((uint8_t*)buffer->data) + (buffer->head * buffer->item_size);
+    memcpy(out, head_address, buffer->item_size);
+
+    return RBUFFER_OK;
+}
+
+enum RingBufferReturnCode get_last(RingBuffer* buffer, void* out) {
+    if (buffer == NULL) {
+        fprintf(stderr, "get_last in RingBuffer, 'buffer' param is null\n");
+        return RBUFFER_ERROR_INVALID_PARAM;
+    }
+
+    if (out == NULL) {
+        fprintf(stderr, "get_last in RingBuffer, 'out' param is null\n");
+        return RBUFFER_ERROR_INVALID_PARAM;
+    }
+    
+    if (is_empty(buffer)) {
+        fprintf(stderr, "get_last from an empty ring buffer\n");
+        return RBUFFER_ERROR_IS_EMPTY;
+    }
+
+    size_t last_index = (buffer->next_position + buffer->capacity - 1) % buffer->capacity;
+    uint8_t* tail_address = ((uint8_t*)buffer->data) + (last_index * buffer->item_size);
+
+    memcpy(out, tail_address, buffer->item_size);
     return RBUFFER_OK;
 }
 
