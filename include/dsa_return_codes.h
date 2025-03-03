@@ -1,0 +1,12 @@
+#ifndef DSA_RETURN_CODES_H
+#define DSA_RETURN_CODES_H
+
+enum DsaReturnCode {
+    DSA_OK = 0,
+    DSA_ERROR_MEM_ALLOC,
+    DSA_ERROR_INVALID_PARAM,
+    DSA_ERROR_IS_EMPTY,
+    DSA_ERROR_RESIZE_FAIL,
+};
+
+#endif
