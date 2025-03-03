@@ -7,6 +7,7 @@
 #include "test_quick_sort.h"
 #include "test_merge_sort.h"
 #include "test_list.h"
+#include "test_ring_buffer.h"
 
 /* Test Suite setup and cleanup functions */
 int init_suite(void) { return 0; }
@@ -128,6 +129,32 @@ int main() {
     test = CU_add_test(suite, "List of structs",
         test_list_of_structs);
     if (test == NULL) goto cleanup;   
+
+    test = CU_add_test(suite, "Generate small ring buffer", test_create_small_ring_buffer);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Insert and remove first in ring buffer", test_ring_buffer_insert_and_remove_first);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Insert and remove last in ring buffer", test_ring_buffer_insert_and_remove_last);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Auto resize increase in ring buffer", test_ring_buffer_auto_resize_increase);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Auto resize decrease in ring buffer", test_ring_buffer_auto_resize_decrease);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Remove from empty ring buffer", test_remove_from_empty_ring_buffer);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Invalid parameters in ring buffer operations", test_invalid_params_ring_buffer);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Ring buffer wrap-around test", test_ring_buffer_wrap_around);
+    if (test == NULL) goto cleanup;
+
+
     //
     // test = CU_add_test(suite, "Mostly Sorted Array",
     //                    test_selection_sort_mostly_sorted);
