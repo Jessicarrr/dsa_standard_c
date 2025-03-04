@@ -8,16 +8,16 @@
 #define CAPACITY_START 8
 #define BUFFER_GROW_THRESHOLD 1
 
-enum DsaReturnCode create_ring_buffer(size_t item_size, RingBuffer* out) {
+enum DscReturnCode create_ring_buffer(size_t item_size, RingBuffer* out) {
     if (out == NULL) {
         fprintf(stderr, "Could not create ring buffer because 'out' param "
                 "was null.\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
 
     if (item_size == 0) {
         fprintf(stderr, "Cannot create ring buffer with item_size of zero.\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
 
     out->item_size = item_size;
@@ -29,10 +29,10 @@ enum DsaReturnCode create_ring_buffer(size_t item_size, RingBuffer* out) {
 
     if (out->data == NULL) {
         fprintf(stderr, "Could not create ring buffer, allocating memory to the data block failed.\n");
-        return DSA_ERROR_MEM_ALLOC;
+        return DSC_ERROR_MEM_ALLOC;
     }
 
-    return DSA_OK;
+    return DSC_OK;
 }
 
 static bool increase_ring_capacity(RingBuffer* buffer) {
@@ -162,15 +162,15 @@ static bool should_decrease_capacity(RingBuffer* buffer) {
     return false;
 }
 
-enum DsaReturnCode ring_buffer_insert(RingBuffer* buffer, void* data) {
+enum DscReturnCode ring_buffer_insert(RingBuffer* buffer, void* data) {
     if (buffer == NULL) {
         fprintf(stderr, "ring_buffer_insert buffer param is null, cannot insert.\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
 
     if (data == NULL) {
         fprintf(stderr, "Cannot put null value into RingBuffer.\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
 
     if (should_increase_capacity(buffer) == true) {
@@ -178,7 +178,7 @@ enum DsaReturnCode ring_buffer_insert(RingBuffer* buffer, void* data) {
 
         if (success == false) {
             fprintf(stderr, "Could not allocate memory for ring buffer.\n");
-            return DSA_ERROR_MEM_ALLOC;
+            return DSC_ERROR_MEM_ALLOC;
         }
     }
 
@@ -188,23 +188,23 @@ enum DsaReturnCode ring_buffer_insert(RingBuffer* buffer, void* data) {
     memcpy(target_address, data, buffer->item_size);
     buffer->length += 1;
     buffer->next_position = get_next_position(buffer);
-    return DSA_OK;
+    return DSC_OK;
 }
 
-enum DsaReturnCode get_and_remove_first(RingBuffer* buffer, void* out) {
+enum DscReturnCode get_and_remove_first(RingBuffer* buffer, void* out) {
     if (buffer == NULL) {
         fprintf(stderr, "get_first in RingBuffer, 'buffer' param is null\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
 
     if (out == NULL) {
         fprintf(stderr, "get_and_remove_first in RingBuffer, 'out' param is null.\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
 
     if (is_empty(buffer)) {
         fprintf(stderr, "Cannot remove from an empty ring buffer\n");
-        return DSA_ERROR_IS_EMPTY;
+        return DSC_ERROR_IS_EMPTY;
     }
 
     uint8_t* head_address = ((uint8_t*)buffer->data) + (buffer->head * buffer->item_size);
@@ -226,23 +226,23 @@ enum DsaReturnCode get_and_remove_first(RingBuffer* buffer, void* out) {
         buffer->next_position = 0;
     }
 
-    return DSA_OK;
+    return DSC_OK;
 }
 
-enum DsaReturnCode get_and_remove_last(RingBuffer* buffer, void* out) {
+enum DscReturnCode get_and_remove_last(RingBuffer* buffer, void* out) {
     if (buffer == NULL) {
         fprintf(stderr, "get_first in RingBuffer, 'buffer' param is null\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
 
     if (out == NULL) {
         fprintf(stderr, "get_and_remove_last in RingBuffer, 'out' param is null\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
     
     if (is_empty(buffer)) {
         fprintf(stderr, "Cannot remove from an empty ring buffer\n");
-        return DSA_ERROR_IS_EMPTY;
+        return DSC_ERROR_IS_EMPTY;
     }
 
     size_t last_index = (buffer->next_position + buffer->capacity - 1) % buffer->capacity;
@@ -262,52 +262,52 @@ enum DsaReturnCode get_and_remove_last(RingBuffer* buffer, void* out) {
         buffer->next_position = 0;
     }
 
-    return DSA_OK;
+    return DSC_OK;
 }
 
-enum DsaReturnCode get_first(RingBuffer* buffer, void* out) {
+enum DscReturnCode get_first(RingBuffer* buffer, void* out) {
     if (buffer == NULL) {
         fprintf(stderr, "get_first in RingBuffer, 'buffer' param is null\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
 
     if (out == NULL) {
         fprintf(stderr, "get_first in RingBuffer, 'out' param is null\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
     
     if (is_empty(buffer)) {
         fprintf(stderr, "Cannot get from an empty ring buffer\n");
-        return DSA_ERROR_IS_EMPTY;
+        return DSC_ERROR_IS_EMPTY;
     }
 
     uint8_t* head_address = ((uint8_t*)buffer->data) + (buffer->head * buffer->item_size);
     memcpy(out, head_address, buffer->item_size);
 
-    return DSA_OK;
+    return DSC_OK;
 }
 
-enum DsaReturnCode get_last(RingBuffer* buffer, void* out) {
+enum DscReturnCode get_last(RingBuffer* buffer, void* out) {
     if (buffer == NULL) {
         fprintf(stderr, "get_last in RingBuffer, 'buffer' param is null\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
 
     if (out == NULL) {
         fprintf(stderr, "get_last in RingBuffer, 'out' param is null\n");
-        return DSA_ERROR_INVALID_PARAM;
+        return DSC_ERROR_INVALID_PARAM;
     }
     
     if (is_empty(buffer)) {
         fprintf(stderr, "get_last from an empty ring buffer\n");
-        return DSA_ERROR_IS_EMPTY;
+        return DSC_ERROR_IS_EMPTY;
     }
 
     size_t last_index = (buffer->next_position + buffer->capacity - 1) % buffer->capacity;
     uint8_t* tail_address = ((uint8_t*)buffer->data) + (last_index * buffer->item_size);
 
     memcpy(out, tail_address, buffer->item_size);
-    return DSA_OK;
+    return DSC_OK;
 }
 
 void ring_buffer_destroy(RingBuffer* buffer) {
