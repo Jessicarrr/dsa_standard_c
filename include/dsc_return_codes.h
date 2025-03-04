@@ -7,6 +7,6 @@ enum DscReturnCode {
     DSC_ERROR_INVALID_PARAM,
     DSC_ERROR_IS_EMPTY,
     DSC_ERROR_RESIZE_FAIL,
-} DscReturnCode;
+};
 
 #endif
