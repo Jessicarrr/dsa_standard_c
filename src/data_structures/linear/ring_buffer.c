@@ -191,7 +191,7 @@ enum DscReturnCode ring_buffer_insert(RingBuffer* buffer, void* data) {
     return DSC_OK;
 }
 
-enum DscReturnCode get_and_remove_first(RingBuffer* buffer, void* out) {
+enum DscReturnCode ring_buffer_pop_first(RingBuffer* buffer, void* out) {
     if (buffer == NULL) {
         fprintf(stderr, "get_first in RingBuffer, 'buffer' param is null\n");
         return DSC_ERROR_INVALID_PARAM;
@@ -229,7 +229,7 @@ enum DscReturnCode get_and_remove_first(RingBuffer* buffer, void* out) {
     return DSC_OK;
 }
 
-enum DscReturnCode get_and_remove_last(RingBuffer* buffer, void* out) {
+enum DscReturnCode ring_buffer_pop_last(RingBuffer* buffer, void* out) {
     if (buffer == NULL) {
         fprintf(stderr, "get_first in RingBuffer, 'buffer' param is null\n");
         return DSC_ERROR_INVALID_PARAM;
@@ -265,7 +265,7 @@ enum DscReturnCode get_and_remove_last(RingBuffer* buffer, void* out) {
     return DSC_OK;
 }
 
-enum DscReturnCode get_first(RingBuffer* buffer, void* out) {
+enum DscReturnCode ring_buffer_peek_first(RingBuffer* buffer, void* out) {
     if (buffer == NULL) {
         fprintf(stderr, "get_first in RingBuffer, 'buffer' param is null\n");
         return DSC_ERROR_INVALID_PARAM;
@@ -287,7 +287,7 @@ enum DscReturnCode get_first(RingBuffer* buffer, void* out) {
     return DSC_OK;
 }
 
-enum DscReturnCode get_last(RingBuffer* buffer, void* out) {
+enum DscReturnCode ring_buffer_peek_last(RingBuffer* buffer, void* out) {
     if (buffer == NULL) {
         fprintf(stderr, "get_last in RingBuffer, 'buffer' param is null\n");
         return DSC_ERROR_INVALID_PARAM;
