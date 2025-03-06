@@ -8,6 +8,7 @@
 #include "test_merge_sort.h"
 #include "test_list.h"
 #include "test_ring_buffer.h"
+#include "test_queue.h"
 
 /* Test Suite setup and cleanup functions */
 int init_suite(void) { return 0; }
@@ -153,6 +154,28 @@ int main() {
 
     test = CU_add_test(suite, "Ring buffer wrap-around test", test_ring_buffer_wrap_around);
     if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "enqueue and dequeue", test_enqueue_dequeue);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Test peek", test_peek);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Test dequeue on empty queue", test_dequeue_empty);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Test enqueue with null pointer", test_enqueue_null);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Test dynamic resize", test_dynamic_resize);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Test alternating operations", test_alternating_operations);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Test create queue with invalid item size", test_create_queue_invalid_item_size);
+    if (test == NULL) goto cleanup;
+
 
 
     //
