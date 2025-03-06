@@ -26,6 +26,7 @@ void test_selection_sort_random(void) {
 
     bool is_ordered = is_array_ordered(arr, size);
     CU_ASSERT(is_ordered == true);
+    free(arr);
 }
 
 void test_selection_sort_reverse(void) {
@@ -50,4 +51,5 @@ void test_selection_sort_reverse(void) {
 
     bool is_ordered = is_array_ordered(arr, size);
     CU_ASSERT(is_ordered == true);
+    free(arr);
 }

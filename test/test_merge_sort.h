@@ -24,7 +24,7 @@ void test_merge_general(char* name, int size, int array_type) {
 
     bool is_ordered = is_array_ordered(arr, size);
     CU_ASSERT(is_ordered == true);
-
+    free(arr);
 }
 
 void test_merge_sort_random(void) {

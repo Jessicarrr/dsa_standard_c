@@ -26,6 +26,7 @@ void test_binary_search_ordered(void) {
     printf("Searched for target number %d, got position %d\n", target, result);
 
     CU_ASSERT(target == result);
+    free(arr);
 }
 
 void test_binary_search_find_first(void) {
@@ -48,6 +49,7 @@ void test_binary_search_find_first(void) {
     printf("Searched for target number %d, got position %d\n", target, result);
 
     CU_ASSERT(result == target);
+    free(arr);
 }
 
 void test_binary_search_random_but_ordered(void) {
@@ -80,6 +82,7 @@ void test_binary_search_random_but_ordered(void) {
             target_index);
 
     CU_ASSERT(result == target_index);
+    free(arr);
 }
 
 void test_binary_search_one_element(void) {
@@ -108,6 +111,7 @@ void test_binary_search_one_element(void) {
             target_index);
 
     CU_ASSERT(result == target_index);
+    free(arr);
 }
 
 void test_binary_search_zero_element(void) {

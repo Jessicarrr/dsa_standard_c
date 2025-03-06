@@ -26,6 +26,7 @@ void test_quick_sort_random(void) {
 
     bool is_ordered = is_array_ordered(arr, size);
     CU_ASSERT(is_ordered == true);
+    free(arr);
 }
 
 
