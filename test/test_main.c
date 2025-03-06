@@ -9,6 +9,7 @@
 #include "test_list.h"
 #include "test_ring_buffer.h"
 #include "test_queue.h"
+#include "test_stack.h"
 
 /* Test Suite setup and cleanup functions */
 int init_suite(void) { return 0; }
@@ -175,6 +176,16 @@ int main() {
 
     test = CU_add_test(suite, "Test create queue with invalid item size", test_create_queue_invalid_item_size);
     if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Stack push and pop", test_stack_push_pop);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Stack invalid parameters", test_stack_invalid_params);
+    if (test == NULL) goto cleanup;
+
+    test = CU_add_test(suite, "Stack empty/full state", test_stack_empty_full);
+    if (test == NULL) goto cleanup;
+
 
 
 
