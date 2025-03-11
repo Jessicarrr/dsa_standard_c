@@ -1,101 +1,124 @@
-#include "data_structures/trees/binary_search_tree.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "helpers.h"
 #include <string.h>
 
-int* bst_get_preorder() { return NULL; }
-int* bst_get_postorder() { return NULL; }
-int* bst_get_inorder() { return NULL; }
+#include "data_structures/trees/binary_search_tree.h"
+#include "dsc_return_codes.h"
 
-static Node* bst_insert_recursive(BinarySearchTree* tree, Node* current,
-                                  void* data) {
-
-    if (current == NULL) {
-        
-        Node* new_node = create_bst_node(data, tree->data_size);
-        tree->root = new_node;
-        return tree->root;
+enum DscReturnCode create_bst_node(
+        void* data,
+        BstNode* out,
+        size_t item_size)
+{
+    if(out == NULL) {
+        fprintf(stderr, "BstNode 'out' param in create_bst_node must not be null "
+                "- Binary Search Tree.");
+        return DSC_ERROR_INVALID_PARAM;
     }
 
-    printf("Compare: data = %p, current->data = %p\n", data, current->data);
-    if (tree->compare(data, current->data) == HIGHER) {
-        if (current->right != NULL) {
-            return bst_insert_recursive(tree, current->right, data);
-        }
-        current->right = create_bst_node(data, tree->data_size);
-        return current->right;
+    out->right = NULL;
+    out->left = NULL;
+    out->data = malloc(item_size);
+
+    if (out->data == NULL) {
+        fprintf(stderr, "An error occurred trying to allocate memory to BstNode->data "
+                "- do you have enough memory?");
+        return DSC_ERROR_MEM_ALLOC;
     }
-    else {
-        if (current->left != NULL) {
-            return bst_insert_recursive(tree, current->left, data);
+
+    memcpy(out->data, data, item_size);
+    return DSC_OK;
+}
+
+enum DscReturnCode create_binary_search_tree(
+        NodeComparison (*compare)(void* data_1, void* data_2),
+        size_t item_size, 
+        BinarySearchTree* out)
+{
+    if(compare == NULL) {
+        fprintf(stderr, "int '*compare' param in create_binary_search_tree "
+                "must not be null. - Binary Search Tree.");
+        return DSC_ERROR_INVALID_PARAM;
+    }
+
+    if (out == NULL) {
+        fprintf(stderr, "BinarySearchTree 'out' param in create_binary_search_tree "
+            "must not be null. - Binary Search Tree.");
+        return DSC_ERROR_INVALID_PARAM;
+    }
+
+    out->root = NULL;
+    out->length = 0;
+    out->item_size = item_size;
+    out->compare = compare;
+    return DSC_OK;
+}
+
+static enum DscReturnCode bst_insert_recursive(
+    BinarySearchTree* tree,
+    BstNode** node_ptr,
+    void* data)
+{
+    if (*node_ptr == NULL) {
+        BstNode* new_node = (BstNode*)malloc(sizeof(BstNode));
+        if (new_node == NULL) {
+            fprintf(stderr, "Memory allocation failed.\n");
+            return DSC_ERROR_MEM_ALLOC;
         }
-        current->left = create_bst_node(data, tree->data_size);
-        return current->left;
+
+        enum DscReturnCode result = create_bst_node(data, new_node, tree->item_size);
+
+        if (result != DSC_OK) {
+            free(new_node);
+            return result;
+        }
+
+        *node_ptr = new_node;
+        return DSC_OK;
+    }
+
+    NodeComparison cmp = tree->compare(data, (*node_ptr)->data);
+
+    // Choose the branch without changing the parent's pointer immediately.
+    if (cmp == LOWER || cmp == EQUAL) {
+        return bst_insert_recursive(tree, &((*node_ptr)->left), data);
+    } else { // HIGHER
+        return bst_insert_recursive(tree, &((*node_ptr)->right), data);
     }
 }
 
-void bst_insert(BinarySearchTree* tree, void* data) {
-    bst_insert_recursive(tree, tree->root, data); 
-}
-
-bool bst_remove(void* data) { return false; }
-
-Node* create_bst_node(void* data, size_t data_size){ 
-    Node* new_node = malloc(sizeof(Node));
-
-    if (new_node == NULL) {
-        print_out_of_memory();
-        return NULL;
+enum DscReturnCode bst_insert(BinarySearchTree* tree, void* data) {
+    if (tree == NULL) {
+        fprintf(stderr, "Invalid param 'tree' in bst_insert - Binary Search Tree.\n");
+        return DSC_ERROR_INVALID_PARAM;
+    }
+    if(data == NULL) {
+        fprintf(stderr, "Invalid param 'data' in bst_insert - Binary Search Tree.\n");
+        return DSC_ERROR_INVALID_PARAM;
     }
     
-    new_node->data = malloc(data_size);
-    memcpy(new_node->data, data, data_size);
-    print_debug("Create node with data %p\n", new_node->data);
-    new_node->left = NULL;
-    new_node->right = NULL;
-    return new_node;
-}
+    enum DscReturnCode ret = bst_insert_recursive(tree, &(tree->root), data);
 
-struct BinarySearchTree* create_binary_search_tree(int (*compare)(void* data_1,
-                                                            void* data_2),
-                                                   size_t data_size) {
-    struct BinarySearchTree* tree = malloc(sizeof(BinarySearchTree));
-
-    if(tree == NULL) {
-        print_out_of_memory();
-        return NULL;
+    if (ret == DSC_OK) {
+        tree->length++;
     }
-
-    tree->size = 0;
-    tree->data_size = data_size;
-    tree->get_postorder = bst_get_postorder;
-    tree->get_preorder = bst_get_preorder;
-    tree->get_inorder = bst_get_inorder;
-    tree->insert = bst_insert;
-    tree->remove = bst_remove;
-    tree->compare = compare;
-
-    return tree;
-}
-void free_binary_search_tree(BinarySearchTree* tree);
-
-static void print_recursive(Node* node, int level) {
-    if (node == NULL) {
-        //printf("(null node)\n");
-        return;
-    }
-
-    printf("level: %d, data: %d\n", level, *((int*)node->data));
-    print_recursive(node->left, level + 1);
-    print_recursive(node->right, level + 1);
-
-    
+    return ret;
 }
 
-void print_binary_search_tree(BinarySearchTree* tree) {
 
-    print_recursive(tree->root, 0);
+enum DscReturnCode bst_remove(void* data);
+bool bst_has_value(BinarySearchTree* tree);
 
-}
+enum DscReturnCode bst_get_preorder(BinarySearchTree* tree, void* out);
+enum DscReturnCode bst_get_postorder(BinarySearchTree* tree, void* out);
+enum DscReturnCode bst_get_inorder(BinarySearchTree* tree, void* out);
+
+
+
+enum DscReturnCode bst_destroy(BinarySearchTree* tree);
+enum DscReturnCode bst_node_destroy(BstNode* node);
+
+void print_bst(
+    BinarySearchTree* tree,
+    char* (*to_string)(void* data));

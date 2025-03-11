@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include "dsc_return_codes.h"
 
 typedef enum NodeComparison {
     LOWER,
@@ -10,34 +11,42 @@ typedef enum NodeComparison {
     HIGHER
 } NodeComparison;
 
-typedef struct Node {
+typedef struct BstNode {
     void* data;
-    struct Node* left;
-    struct Node* right;
-} Node;
+    struct BstNode* left;
+    struct BstNode* right;
+} BstNode;
 
 typedef struct BinarySearchTree {
-    struct Node* root;
-    int size;
-    size_t data_size;
-    int (*compare)(void* data_1, void* data_2);
-    int* (*get_preorder)();
-    int* (*get_postorder)();
-    int* (*get_inorder)();
-    void (*insert)(struct BinarySearchTree* tree, void* data);
-    bool (*remove)(void* data);
+    struct BstNode* root;
+    size_t length;
+    size_t item_size;
+    NodeComparison (*compare)(void* data_1, void* data_2);
 } BinarySearchTree;
 
-int* bst_get_preorder();
-int* bst_get_postorder();
-int* bst_get_inorder();
-void bst_insert(BinarySearchTree* tree, void* data);
-bool bst_remove(void* data);
+enum DscReturnCode create_bst_node(
+    void* data,
+    BstNode* out,
+    size_t item_size);
 
-Node* create_bst_node(void* data, size_t data_size);
-struct BinarySearchTree* create_binary_search_tree(
-        int (*compare)(void* data_1, void* data_2), size_t data_size);
-void free_binary_search_tree(BinarySearchTree* tree);
+enum DscReturnCode create_binary_search_tree(
+    NodeComparison (*compare)(void* data_1, void* data_2),
+    size_t item_size, 
+    BinarySearchTree* out);
 
-void print_binary_search_tree(BinarySearchTree* tree);
+enum DscReturnCode bst_insert(BinarySearchTree* tree, void* data);
+enum DscReturnCode bst_remove(void* data);
+bool bst_has_value(BinarySearchTree* tree);
+
+enum DscReturnCode bst_get_preorder(BinarySearchTree* tree, void* out);
+enum DscReturnCode bst_get_postorder(BinarySearchTree* tree, void* out);
+enum DscReturnCode bst_get_inorder(BinarySearchTree* tree, void* out);
+
+enum DscReturnCode bst_destroy(BinarySearchTree* tree);
+enum DscReturnCode bst_node_destroy(BstNode* node);
+
+void print_bst(
+    BinarySearchTree* tree,
+    char* (*to_string)(void* data));
+
 #endif
