@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include "data_structures/linear/ring_buffer.h"
-#include "dsc_return_codes.h"
+#include "dsc_result.h"
 
 typedef struct Queue {
     struct RingBuffer* buffer;

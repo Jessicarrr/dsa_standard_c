@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include "dsc_return_codes.h"
+#include "dsc_result.h"
 
 typedef struct RingBuffer {
     void* data;

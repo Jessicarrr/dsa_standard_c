@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "data_structures/trees/binary_search_tree.h"
-#include "dsc_return_codes.h"
+#include "dsc_result.h"
 
 enum DscReturnCode create_bst_node(
         void* data,

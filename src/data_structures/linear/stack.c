@@ -1,92 +1,149 @@
 #include "data_structures/linear/stack.h"
 #include <stdio.h>
+#include <stdlib.h>
 
-enum DscReturnCode create_stack(size_t item_size, Stack* out) {
-    if (out == NULL) {
-        fprintf(stderr, "Could not allocate enough memory to create a Stack. "
-            "Not enough system memory available?");
-        return DSC_ERROR_MEM_ALLOC;
+Stack* create_stack(size_t item_size, DscError **error) {
+    if (item_size == 0) {
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_INVALID_PARAM, "Item size must be greater than zero.");
+        }
+        return NULL;
     }
 
-    out->list = create_list(item_size);
-    return DSC_OK;
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    if (stack == NULL) {
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_MEM_ALLOC, "Failed to allocate memory for stack.");
+        }
+        return NULL;
+    }
+
+    stack->list = create_list(item_size, error);
+    if (stack->list == NULL) {
+        free(stack);
+        return NULL;
+    }
+    stack->length = stack->list->length;
+    return stack;
 }
 
-enum DscReturnCode stack_destroy(Stack* stack) {
+void stack_destroy(Stack* stack) {
+    if (stack == NULL) {
+        return;
+    }
     list_destroy(stack->list);
-    return DSC_OK;
+    free(stack);
 }
 
-enum DscReturnCode stack_push(Stack* stack, void* out) {
+bool stack_push(Stack* stack, void* item, DscError **error) {
     if (stack == NULL) {
-        fprintf(stderr, "Stack: the 'stack' parameter was null, "
-            "cannot continue with push operation.");
-        return DSC_ERROR_INVALID_PARAM;
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_INVALID_PARAM, "Stack is NULL in stack_push.");
+        }
+        return false;
     }
-    if (out == NULL) {
-        fprintf(stderr, "Stack: the 'out' param was null, cannot "
-            "continue with push operation.");
-        return DSC_ERROR_INVALID_PARAM;
-
+    if (item == NULL) {
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_INVALID_PARAM, "Item pointer is NULL in stack_push.");
+        }
+        return false;
     }
-
-    list_insert(stack->list, out);
+    list_insert(stack->list, item, error);
+    if (*error != NULL) {
+        return false;
+    }
     stack->length = stack->list->length;
-    return DSC_OK;
+    return true;
 }
 
-enum DscReturnCode stack_pop(Stack* stack, void* out) {
+bool stack_pop(Stack* stack, void* out, DscError **error) {
     if (stack == NULL) {
-        fprintf(stderr, "Stack: the 'stack' parameter was null, "
-            "cannot continue with pop operation.");
-        return DSC_ERROR_INVALID_PARAM;
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_INVALID_PARAM, "Stack is NULL in stack_pop.");
+        }
+        return false;
     }
     if (out == NULL) {
-        fprintf(stderr, "Stack: the 'out' param was null, cannot "
-            "continue with pop operation.");
-        return DSC_ERROR_INVALID_PARAM;
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_INVALID_PARAM, "Output pointer is NULL in stack_pop.");
+        }
+        return false;
     }
-
+    if (stack->list->length == 0) {
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_IS_EMPTY, "Stack is empty in stack_pop.");
+        }
+        return false;
+    }
     size_t position = stack->list->length - 1;
-    list_get_value_at(stack->list, position, out);
-    list_remove(stack->list, position);
+    if (list_get_value_at(stack->list, position, out, error) != 0) {
+        return false;
+    }
+    list_remove(stack->list, position, error);
+    if (*error != NULL) {
+        return false;
+    }
     stack->length = stack->list->length;
-
-    return DSC_OK;
+    return true;
 }
 
-enum DscReturnCode stack_peek(Stack* stack, void* out) {
+bool stack_peek(Stack* stack, void* out, DscError **error) {
     if (stack == NULL) {
-        fprintf(stderr, "Stack: the 'stack' parameter was null, "
-            "cannot continue with peek operation.");
-        return DSC_ERROR_INVALID_PARAM;
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_INVALID_PARAM, "Stack is NULL in stack_peek.");
+        }
+        return false;
     }
     if (out == NULL) {
-        fprintf(stderr, "Stack: the 'out' param was null, cannot "
-            "continue with peek operation.");
-        return DSC_ERROR_INVALID_PARAM;
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_INVALID_PARAM, "Output pointer is NULL in stack_peek.");
+        }
+        return false;
     }
-
+    if (stack->list->length == 0) {
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_IS_EMPTY, "Stack is empty in stack_peek.");
+        }
+        return false;
+    }
     size_t position = stack->list->length - 1;
-    list_get_value_at(stack->list, position, out);
-
-    return DSC_OK;
+    if (list_get_value_at(stack->list, position, out, error) != 0) {
+        return false;
+    }
+    return true;
 }
 
-bool stack_is_empty(Stack* stack) {
+bool stack_is_empty(Stack* stack, DscError **error) {
     if (stack == NULL) {
-        fprintf(stderr, "Stack: the 'stack' parameter was null, "
-            "cannot continue with 'is empty' operation.");
-        return DSC_ERROR_INVALID_PARAM;
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_INVALID_PARAM, "Stack is NULL in stack_is_empty.");
+        }
+        return true;
     }
-    return stack->length == 0;
+    return (stack->length == 0);
 }
 
-bool stack_is_full(Stack* stack) {
+bool stack_is_full(Stack* stack, DscError **error) {
     if (stack == NULL) {
-        fprintf(stderr, "Stack: the 'stack' parameter was null, "
-            "cannot continue with 'is full' operation.");
-        return DSC_ERROR_INVALID_PARAM;
+        if (error) {
+            *error = create_dsc_error(DSC_ERROR_INVALID_PARAM, "Stack is NULL in stack_is_full.");
+        }
+        return false;
     }
-    return stack->length != 0;
+    
+    if (stack->list->capacity == 0) {
+        return false;
+    }
+
+    size_t slots_left = stack->list->capacity - stack->list->length;
+
+    //printf("Stack debug: slots_left = %zd\n", slots_left);
+    if (slots_left == 0) {
+        //printf("Returning true - it is full.\n");
+        return true;
+    }
+
+    //printf("Returning false - it is not full.\n");
+    return false;
+   
 }

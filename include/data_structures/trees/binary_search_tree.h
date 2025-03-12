@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "dsc_return_codes.h"
+#include "dsc_result.h"
 
 typedef enum NodeComparison {
     LOWER,
